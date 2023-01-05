@@ -1,8 +1,9 @@
 import { StyleSheet, View, Text } from 'react-native'
+import { COLORS } from '../constants/GlobalStyles'
 
-export const RecentRatings = () => {
+export const RecentRatingsList = () => {
   return (
-    <View style={styles.container}>
+    <View style={styles.screen}>
       <Text>Recent Ratings Screen</Text>
     </View>
   )
@@ -10,6 +11,7 @@ export const RecentRatings = () => {
 
 const styles = StyleSheet.create({
   screen: {
+    backgroundColor: COLORS.primary800,
     flex: 1,
   },
 })
