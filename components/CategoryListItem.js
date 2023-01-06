@@ -2,6 +2,8 @@ import { StyleSheet, Pressable, Text } from 'react-native'
 import { COLORS } from '../constants/GlobalStyles'
 
 export const CategoryListItem = ({ category, onPress }) => {
+  // TODO: make list item dark/low opacity if no ratings in this category - add number of ratings in category
+
   return (
     <Pressable style={({ pressed }) => [styles.item, pressed && styles.pressed]} onPress={onPress}>
       <Text style={styles.title}>{category}</Text>

@@ -9,6 +9,7 @@ import { IconButton } from './components/ui/IconButton'
 import { CategoriesList } from './screens/CategoriesList'
 import { RatingsList } from './screens/RatingsList'
 import { RecentRatingsList } from './screens/RecentRatingsList'
+import { RatingDetails } from './screens/RatingDetails'
 import { ManageRating } from './screens/ManageRating'
 import { ProfileScreen } from './screens/ProfileScreen'
 
@@ -17,52 +18,39 @@ const BottomTabs = createBottomTabNavigator()
 
 const RatingsScreens = () => {
   return (
-    <BottomTabs.Navigator
-      screenOptions={({ navigation }) => ({
+    <Stack.Navigator
+      screenOptions={{
         headerStyle: {
           backgroundColor: COLORS.primary800,
         },
         headerTintColor: COLORS.primary100,
-        headerShadowVisible: false,
-        headerRight: () => {
-          return (
-            <IconButton
-              icon='add'
-              color={COLORS.primary100}
-              onPress={() => navigation.navigate('ManageRating')}
-            />
-          )
-        },
-        tabBarStyle: {
-          backgroundColor: COLORS.primary600,
-          borderTopWidth: 0,
-        },
-        tabBarInactiveTintColor: COLORS.primary100,
-        tabBarActiveTintColor: COLORS.primary200,
-      })}>
-      <BottomTabs.Screen
-        name='Categories'
+      }}>
+      <Stack.Screen
+        name='CategoriesList'
         component={CategoriesList}
+        options={({ navigation }) => ({
+          headerTitle: 'All Ratings',
+          headerRight: () => {
+            return (
+              <IconButton
+                icon='add'
+                color={COLORS.primary100}
+                onPress={() => navigation.navigate('ManageRating')}
+              />
+            )
+          },
+        })}
+      />
+      <Stack.Screen name='RatingsList' component={RatingsList} />
+      <Stack.Screen name='RatingDetails' component={RatingDetails} />
+      <Stack.Screen
+        name='ManageRating'
+        component={ManageRating}
         options={{
-          tabBarIcon: ({ color, size }) => <Ionicons name='list' size={size} color={color} />,
+          presentation: 'modal',
         }}
       />
-      <BottomTabs.Screen
-        name='RecentRatings'
-        component={RecentRatingsList}
-        options={{
-          tabBarIcon: ({ color, size }) => <Ionicons name='time' size={size} color={color} />,
-          title: 'Recent',
-        }}
-      />
-      <BottomTabs.Screen
-        name='Profile'
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ color, size }) => <Ionicons name='person' size={size} color={color} />,
-        }}
-      />
-    </BottomTabs.Navigator>
+    </Stack.Navigator>
   )
 }
 
@@ -71,28 +59,45 @@ export default function App() {
     <>
       <StatusBar style='light' />
       <NavigationContainer>
-        <Stack.Navigator
+        <BottomTabs.Navigator
           screenOptions={{
             headerStyle: {
               backgroundColor: COLORS.primary800,
             },
             headerTintColor: COLORS.primary100,
             headerShadowVisible: false,
+            tabBarStyle: {
+              backgroundColor: COLORS.primary600,
+              borderTopWidth: 0,
+            },
+            tabBarInactiveTintColor: COLORS.primary100,
+            tabBarActiveTintColor: COLORS.primary200,
           }}>
-          <Stack.Screen
-            name='RatingsScreens'
+          <BottomTabs.Screen
+            name='Ratings'
             component={RatingsScreens}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name='RatingsList' component={RatingsList} />
-          <Stack.Screen
-            name='ManageRating'
-            component={ManageRating}
             options={{
-              presentation: 'modal',
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => <Ionicons name='list' size={size} color={color} />,
             }}
           />
-        </Stack.Navigator>
+          <BottomTabs.Screen
+            name='RecentRatings'
+            component={RecentRatingsList}
+            options={{
+              tabBarIcon: ({ color, size }) => <Ionicons name='time' size={size} color={color} />,
+              headerTitle: 'Recent Ratings',
+              title: 'Recent',
+            }}
+          />
+          <BottomTabs.Screen
+            name='Profile'
+            component={ProfileScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => <Ionicons name='person' size={size} color={color} />,
+            }}
+          />
+        </BottomTabs.Navigator>
       </NavigationContainer>
     </>
   )

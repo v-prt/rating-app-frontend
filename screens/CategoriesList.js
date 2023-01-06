@@ -5,13 +5,26 @@ import { dummyRatings } from '../data/dummy-data'
 import { CategoryListItem } from '../components/CategoryListItem'
 
 export const CategoriesList = ({ navigation }) => {
-  const [categories, setCategories] = useState()
+  const [categories, setCategories] = useState([
+    // 'Books', (in user's categories)
+    'Movies',
+    'TV Shows',
+    'Video Games',
+    'Board Games',
+    'Music',
+    'Restaurants',
+    'Other',
+  ])
 
   useEffect(() => {
     // get categories from dummy data, remove duplicates
+    const userCategories = dummyRatings
+      .map(rating => rating.category)
+      .filter((category, index, self) => self.indexOf(category) === index)
     setCategories(
-      dummyRatings
-        .map(rating => rating.category)
+      // add user categories to default categories, ignore duplicates
+      categories
+        .concat(userCategories)
         .filter((category, index, self) => self.indexOf(category) === index)
     )
   }, [dummyRatings])

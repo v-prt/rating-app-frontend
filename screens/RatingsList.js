@@ -29,6 +29,7 @@ export const RatingsList = ({ route, navigation }) => {
           keyExtractor={item => item.id}
         />
       ) : (
+        // TODO: fix styling
         <Text>No ratings in this category yet.</Text>
       )}
     </View>

@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     color: COLORS.primary100,
+    maxWidth: '80%',
   },
   ratingWrapper: {
     flexDirection: 'row',
