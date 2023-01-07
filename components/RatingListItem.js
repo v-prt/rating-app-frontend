@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   rating: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Karla-Bold',
     marginRight: 6,
     color: COLORS.primary100,
   },

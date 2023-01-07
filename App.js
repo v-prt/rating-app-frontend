@@ -1,8 +1,12 @@
+import { useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { MaterialIcons } from '@expo/vector-icons'
+import * as SplashScreen from 'expo-splash-screen'
+import { useFonts } from 'expo-font'
+import { setCustomText } from 'react-native-global-props'
 import { COLORS } from './constants/GlobalStyles'
 
 import { CategoriesList } from './screens/CategoriesList'
@@ -15,6 +19,8 @@ import { ProfileScreen } from './screens/ProfileScreen'
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
+
+SplashScreen.preventAutoHideAsync()
 
 const RatingsScreens = () => {
   return (
@@ -73,6 +79,36 @@ const RatingsScreens = () => {
 }
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'Karla-Regular': require('./assets/fonts/Karla-Regular.ttf'),
+    'Karla-Medium': require('./assets/fonts/Karla-Medium.ttf'),
+    'Karla-Bold': require('./assets/fonts/Karla-Bold.ttf'),
+  })
+
+  // set app wide font
+  const customTextProps = {
+    style: {
+      fontFamily: 'Karla-Regular',
+    },
+  }
+  setCustomText(customTextProps)
+
+  useEffect(() => {
+    const prepare = async () => {
+      // simulate longer loading by waiting 2 seconds
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      await SplashScreen.hideAsync()
+    }
+
+    if (fontsLoaded) {
+      prepare()
+    }
+  }, [fontsLoaded])
+
+  if (!fontsLoaded) {
+    return null
+  }
+
   return (
     <>
       <StatusBar style='light' />

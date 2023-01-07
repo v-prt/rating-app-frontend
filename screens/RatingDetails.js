@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   title: {
     color: '#fff',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Karla-Bold',
     marginBottom: 5,
   },
   starsWrapper: {
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   number: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontFamily: 'Karla-Bold',
   },
   star: {
     marginRight: 4,
