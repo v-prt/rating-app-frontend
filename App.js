@@ -2,15 +2,15 @@ import { StatusBar } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Ionicons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import { COLORS } from './constants/GlobalStyles'
-import { IconButton } from './components/ui/IconButton'
 
 import { CategoriesList } from './screens/CategoriesList'
 import { RatingsList } from './screens/RatingsList'
 import { RecentRatingsList } from './screens/RecentRatingsList'
 import { RatingDetails } from './screens/RatingDetails'
 import { ManageRating } from './screens/ManageRating'
+import { Friends } from './screens/Friends'
 import { ProfileScreen } from './screens/ProfileScreen'
 
 const Stack = createNativeStackNavigator()
@@ -29,12 +29,23 @@ const RatingsScreens = () => {
         name='CategoriesList'
         component={CategoriesList}
         options={({ navigation }) => ({
-          headerTitle: 'All Ratings',
-          headerRight: () => {
+          headerTitle: 'All',
+          headerLeft: ({ tintColor }) => {
             return (
-              <IconButton
-                icon='add'
-                color={COLORS.primary100}
+              <MaterialIcons
+                name='history'
+                size={24}
+                color={tintColor}
+                onPress={() => navigation.navigate('RecentRatingsList')}
+              />
+            )
+          },
+          headerRight: ({ tintColor }) => {
+            return (
+              <MaterialIcons
+                name='add'
+                size={24}
+                color={tintColor}
                 onPress={() => navigation.navigate('ManageRating')}
               />
             )
@@ -42,6 +53,13 @@ const RatingsScreens = () => {
         })}
       />
       <Stack.Screen name='RatingsList' component={RatingsList} />
+      <Stack.Screen
+        name='RecentRatingsList'
+        component={RecentRatingsList}
+        options={{
+          title: 'Recent',
+        }}
+      />
       <Stack.Screen name='RatingDetails' component={RatingDetails} />
       <Stack.Screen
         name='ManageRating'
@@ -78,23 +96,28 @@ export default function App() {
             component={RatingsScreens}
             options={{
               headerShown: false,
-              tabBarIcon: ({ color, size }) => <Ionicons name='list' size={size} color={color} />,
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name='stars' size={size} color={color} />
+              ),
             }}
           />
           <BottomTabs.Screen
-            name='RecentRatings'
-            component={RecentRatingsList}
-            options={{
-              tabBarIcon: ({ color, size }) => <Ionicons name='time' size={size} color={color} />,
-              headerTitle: 'Recent Ratings',
-              title: 'Recent',
-            }}
-          />
-          <BottomTabs.Screen
-            name='Profile'
+            name='You'
             component={ProfileScreen}
             options={{
-              tabBarIcon: ({ color, size }) => <Ionicons name='person' size={size} color={color} />,
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name='account-circle' size={size} color={color} />
+              ),
+            }}
+          />
+          <BottomTabs.Screen
+            name='Friends'
+            component={Friends}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name='group-work' size={size} color={color} />
+              ),
+              title: 'Friends',
             }}
           />
         </BottomTabs.Navigator>

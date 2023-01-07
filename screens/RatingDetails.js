@@ -31,7 +31,7 @@ export const RatingDetails = ({ route, navigation }) => {
   const stars = []
   for (let i = 0; i < item.rating; i++) {
     stars.push(
-      <View style={styles.star}>
+      <View style={styles.star} key={i}>
         <Ionicons name='star' size={18} color={COLORS.primary200} />
       </View>
     )

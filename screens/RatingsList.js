@@ -24,13 +24,14 @@ export const RatingsList = ({ route, navigation }) => {
         <FlatList
           data={ratings}
           renderItem={({ item }) => (
-            <RatingListItem rating={item} onPress={() => selectRatingHandler(item.id)} />
+            <RatingListItem item={item} onPress={() => selectRatingHandler(item.id)} />
           )}
           keyExtractor={item => item.id}
         />
       ) : (
-        // TODO: fix styling
-        <Text>No ratings in this category yet.</Text>
+        <View style={styles.fallback}>
+          <Text style={styles.fallbackText}>No ratings in this category yet.</Text>
+        </View>
       )}
     </View>
   )
@@ -40,5 +41,14 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: COLORS.primary800,
     flex: 1,
+  },
+  fallback: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  fallbackText: {
+    color: '#fff',
+    opacity: 0.5,
   },
 })
