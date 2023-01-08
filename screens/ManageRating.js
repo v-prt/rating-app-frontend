@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { StyleSheet, View, Button } from 'react-native'
 import { COLORS } from '../constants/GlobalStyles'
 import { Formik } from 'formik'
@@ -6,6 +6,7 @@ import * as yup from 'yup'
 import { dummyRatings } from '../data/dummy-data'
 import { FormItem } from '../components/ui/FormItem'
 import { Input } from '../components/ui/Input'
+import { RatingButtons } from '../components/ui/RatingButtons'
 
 export const ManageRating = ({ route, navigation }) => {
   const ratingId = route.params?.ratingId
@@ -21,16 +22,16 @@ export const ManageRating = ({ route, navigation }) => {
 
   const validationSchema = yup.object().shape({
     title: yup.string().required('Required').min(2, 'Too short'),
-    // rating: yup.number().required('Required').min(1).max(10).integer(),
-    // description: yup.string(),
+    rating: yup.number().required('Required').min(1, 'Required'),
+    description: yup.string(),
     // image: yup.string(),
   })
 
   const initialValues = {
     title: existingData?.title || '',
-    rating: existingData?.rating || '',
+    rating: existingData?.rating || 0,
     description: existingData?.description || '',
-    image: existingData?.image || '',
+    // image: existingData?.image || '',
   }
 
   const saveRatingHandler = values => {
@@ -40,12 +41,15 @@ export const ManageRating = ({ route, navigation }) => {
 
   return (
     <View style={styles.screen}>
-      {/* TODO: inputs for title, rating (stars), description, image, and map */}
+      {/* TODO:
+        - image (choose from device album or take image with device camera)
+        - location/address (current location or choose from map)
+        - submit to backend */}
       <Formik
         validationSchema={validationSchema}
         initialValues={initialValues}
         onSubmit={saveRatingHandler}>
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
           <>
             <FormItem name='title' label='Title'>
               <Input
@@ -53,6 +57,14 @@ export const ManageRating = ({ route, navigation }) => {
                   onBlur: handleBlur('title'),
                   onChangeText: handleChange('title'),
                   value: values.title,
+                }}
+              />
+            </FormItem>
+            <FormItem name='rating' label='Rating'>
+              <RatingButtons
+                rating={values.rating}
+                setRating={rating => {
+                  setFieldValue('rating', rating)
                 }}
               />
             </FormItem>
