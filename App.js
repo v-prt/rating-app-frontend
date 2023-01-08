@@ -85,23 +85,23 @@ export default function App() {
     'Karla-Bold': require('./assets/fonts/Karla-Bold.ttf'),
   })
 
-  // set app wide font
+  // app wide font
   const customTextProps = {
     style: {
       fontFamily: 'Karla-Regular',
     },
   }
-  setCustomText(customTextProps)
 
   useEffect(() => {
     const prepare = async () => {
-      // simulate longer loading by waiting 2 seconds
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      // simulate longer loading by waiting 1 second
+      await new Promise(resolve => setTimeout(resolve, 1000))
       await SplashScreen.hideAsync()
     }
 
     if (fontsLoaded) {
       prepare()
+      setCustomText(customTextProps)
     }
   }, [fontsLoaded])
 
