@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
-import { StyleSheet, View, TextInput, Button } from 'react-native'
+import { StyleSheet, View, Button } from 'react-native'
 import { COLORS } from '../constants/GlobalStyles'
 import { Formik } from 'formik'
 import * as yup from 'yup'
 import { dummyRatings } from '../data/dummy-data'
 import { FormItem } from '../components/ui/FormItem'
+import { Input } from '../components/ui/Input'
 
 export const ManageRating = ({ route, navigation }) => {
   const ratingId = route.params?.ratingId
@@ -47,11 +48,22 @@ export const ManageRating = ({ route, navigation }) => {
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <>
             <FormItem name='title' label='Title'>
-              <TextInput
-                style={styles.input}
-                onChangeText={handleChange('title')}
-                onBlur={handleBlur('title')}
-                value={values.title}
+              <Input
+                config={{
+                  onBlur: handleBlur('title'),
+                  onChangeText: handleChange('title'),
+                  value: values.title,
+                }}
+              />
+            </FormItem>
+            <FormItem name='description' label='Description'>
+              <Input
+                config={{
+                  onBlur: handleBlur('description'),
+                  onChangeText: handleChange('description'),
+                  value: values.description,
+                  multiline: true,
+                }}
               />
             </FormItem>
             <Button onPress={handleSubmit} title='Save' />
@@ -67,11 +79,5 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary800,
     flex: 1,
     padding: 20,
-  },
-  input: {
-    backgroundColor: COLORS.primary100,
-    padding: 10,
-    borderRadius: 10,
-    fontSize: 16,
   },
 })
