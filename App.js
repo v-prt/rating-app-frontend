@@ -16,6 +16,7 @@ import { RatingDetails } from './screens/RatingDetails'
 import { ManageRating } from './screens/ManageRating'
 import { Friends } from './screens/Friends'
 import { ProfileScreen } from './screens/ProfileScreen'
+import { LoginScreen } from './screens/LoginScreen'
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
@@ -108,6 +109,8 @@ export default function App() {
   if (!fontsLoaded) {
     return null
   }
+
+  return <LoginScreen />
 
   return (
     <>
