@@ -1,56 +1,62 @@
-import { StyleSheet, View, Button } from 'react-native'
+import { StyleSheet, View, Button, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import { Input } from '../components/ui/Input'
 import { FormItem } from '../components/ui/FormItem'
 import { COLORS } from '../constants/GlobalStyles'
+import { getToken } from '../util/auth'
 
 export const LoginScreen = () => {
   const validationSchema = yup.object().shape({
-    username: yup.string().required('Required').min(6, 'Usernames must be at least 6 characters'),
-    password: yup.string().required('Required').min(6, 'Passwords must be at least 6 characters'),
+    email: yup.string().required('Required').min(3, 'Usernames must be at least 6 characters'),
+    password: yup.string().required('Required').min(3, 'Passwords must be at least 6 characters'),
   })
 
   const initialValues = {
-    username: '',
+    email: '',
     password: '',
   }
 
-  const loginHandler = () => {}
+  const loginHandler = async ({ email, password }) => {
+    const response = await getToken(email, password)
+    console.log(response)
+  }
 
   return (
-    <View style={styles.screen}>
-      <Formik
-        validationSchema={validationSchema}
-        initialValues={initialValues}
-        onSubmit={loginHandler}>
-        {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-          <>
-            <FormItem name='username' label='Username'>
-              <Input
-                config={{
-                  onBlur: handleBlur('username'),
-                  onChangeText: handleChange('username'),
-                  value: values.username,
-                  autoCapitalize: 'none',
-                }}
-              />
-            </FormItem>
-            <FormItem name='password' label='Password'>
-              <Input
-                config={{
-                  onBlur: handleBlur('password'),
-                  onChangeText: handleChange('password'),
-                  value: values.password,
-                  secureTextEntry: true,
-                }}
-              />
-            </FormItem>
-            <Button onPress={handleSubmit} title='Save' />
-          </>
-        )}
-      </Formik>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.screen}>
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+          onSubmit={loginHandler}>
+          {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+            <>
+              <FormItem name='email' label='Email'>
+                <Input
+                  config={{
+                    onBlur: handleBlur('email'),
+                    onChangeText: handleChange('email'),
+                    value: values.email,
+                    autoCapitalize: 'none',
+                  }}
+                />
+              </FormItem>
+              <FormItem name='password' label='Password'>
+                <Input
+                  config={{
+                    onBlur: handleBlur('password'),
+                    onChangeText: handleChange('password'),
+                    value: values.password,
+                    secureTextEntry: true,
+                  }}
+                />
+              </FormItem>
+              <Button onPress={handleSubmit} title='Save' />
+            </>
+          )}
+        </Formik>
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
