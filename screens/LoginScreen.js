@@ -1,4 +1,4 @@
-import { StyleSheet, View, Button, Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { StyleSheet, View, Button, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native'
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import { Input } from '../components/ui/Input'
@@ -19,7 +19,13 @@ export const LoginScreen = () => {
 
   const loginHandler = async ({ email, password }) => {
     const response = await getToken(email, password)
-    console.log(response)
+    if (response.status === 200) {
+      // Get token, store it
+      console.log(response.data.access_token)
+    } else {
+      Alert.alert('Invalid credentials', 'Email or password incorrect')
+    }
+    // cleanup
   }
 
   return (

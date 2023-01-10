@@ -11,9 +11,9 @@ export const getToken = async (email, password) => {
   const payload = { email, password }
   try {
     const response = await axios.post(`${API_URL}/token`, payload)
-    console.log(response)
-    return response.data.access_token
+    return response
   } catch (err) {
     console.log(err)
+    return err.response
   }
 }
