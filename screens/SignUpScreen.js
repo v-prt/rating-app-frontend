@@ -1,10 +1,11 @@
-import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { COLORS } from '../constants/GlobalStyles'
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import { Input } from '../components/ui/Input'
 import { FormItem } from '../components/ui/FormItem'
 import { ActionButton } from '../components/ui/ActionButton'
+import { createUser } from '../util/auth'
 export const SignUpScreen = () => {
   const validationSchema = yup.object().shape({
     email: yup.string().required('Required').email('Invalid email'),
@@ -22,8 +23,16 @@ export const SignUpScreen = () => {
     lastName: '',
   }
 
-  const createAccountHandler = values => {
-    // TODO
+  const createAccountHandler = async values => {
+    const response = await createUser(values)
+    console.log(response.data)
+    if (response.status === 200) {
+      //success stuff
+    } else if (response.status === 400) {
+      Alert.alert('Invalid credentials', response.data.detail)
+    } else {
+      // general error stuff
+    }
   }
 
   return (
@@ -45,7 +54,6 @@ export const SignUpScreen = () => {
                       onBlur: handleBlur('email'),
                       onChangeText: handleChange('email'),
                       value: values.email,
-                      autoCapitalize: 'none',
                       keyboardType: 'email-address',
                     }}
                   />
@@ -66,6 +74,7 @@ export const SignUpScreen = () => {
                       onBlur: handleBlur('username'),
                       onChangeText: handleChange('username'),
                       value: values.username,
+                      autoCorrect: false,
                     }}
                   />
                 </FormItem>
@@ -75,6 +84,7 @@ export const SignUpScreen = () => {
                       onBlur: handleBlur('firstName'),
                       onChangeText: handleChange('firstName'),
                       value: values.firstName,
+                      autoCorrect: false,
                     }}
                   />
                 </FormItem>
@@ -84,6 +94,7 @@ export const SignUpScreen = () => {
                       onBlur: handleBlur('lastName'),
                       onChangeText: handleChange('lastName'),
                       value: values.lastName,
+                      autoCorrect: false,
                     }}
                   />
                 </FormItem>
