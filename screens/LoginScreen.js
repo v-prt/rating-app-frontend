@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  View,
-  Button,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Alert,
-  Text,
-} from 'react-native'
+import { StyleSheet, View, Keyboard, TouchableWithoutFeedback, Alert, Text } from 'react-native'
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import { Input } from '../components/ui/Input'
@@ -14,8 +6,11 @@ import { FormItem } from '../components/ui/FormItem'
 import { COLORS } from '../constants/GlobalStyles'
 import { getToken } from '../util/auth'
 import { ActionButton } from '../components/ui/ActionButton'
+import { useNavigation } from '@react-navigation/native'
 
 export const LoginScreen = () => {
+  // const navigation = useNavigation() <--- TODO
+
   const validationSchema = yup.object().shape({
     email: yup.string().required('Required').min(3, 'Usernames must be at least 6 characters'),
     password: yup.string().required('Required').min(3, 'Passwords must be at least 6 characters'),
@@ -37,7 +32,9 @@ export const LoginScreen = () => {
     // cleanup
   }
 
-  const signUpHandler = () => {}
+  const signUpHandler = () => {
+    // navigation.navigate('SignUp') <--- TODO
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -59,6 +56,7 @@ export const LoginScreen = () => {
                       onChangeText: handleChange('email'),
                       value: values.email,
                       autoCapitalize: 'none',
+                      keyboardType: 'email-address',
                     }}
                   />
                 </FormItem>

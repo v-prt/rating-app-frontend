@@ -17,6 +17,7 @@ import { ManageRating } from './screens/ManageRating'
 import { Friends } from './screens/Friends'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { LoginScreen } from './screens/LoginScreen'
+import { SignUpScreen } from './screens/SignUpScreen'
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
@@ -110,7 +111,7 @@ export default function App() {
     return null
   }
 
-  return <LoginScreen />
+  return <SignUpScreen />
 
   return (
     <>

@@ -27,16 +27,10 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     backgroundColor: COLORS.primary200,
   },
-  flat: {
-    backgroundColor: 'transparent',
-  },
   buttonText: {
     color: COLORS.primary100,
     textAlign: 'center',
     fontSize: 16,
-  },
-  flatText: {
-    // color: GlobalStyles.colors.primary200,
   },
   pressed: {
     opacity: 0.7,
