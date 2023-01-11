@@ -1,10 +1,19 @@
-import { StyleSheet, View, Button, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Button,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Alert,
+  Text,
+} from 'react-native'
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import { Input } from '../components/ui/Input'
 import { FormItem } from '../components/ui/FormItem'
 import { COLORS } from '../constants/GlobalStyles'
 import { getToken } from '../util/auth'
+import { ActionButton } from '../components/ui/ActionButton'
 
 export const LoginScreen = () => {
   const validationSchema = yup.object().shape({
@@ -28,39 +37,55 @@ export const LoginScreen = () => {
     // cleanup
   }
 
+  const signUpHandler = () => {}
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.screen}>
-        <Formik
-          validationSchema={validationSchema}
-          initialValues={initialValues}
-          onSubmit={loginHandler}>
-          {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-            <>
-              <FormItem name='email' label='Email'>
-                <Input
-                  config={{
-                    onBlur: handleBlur('email'),
-                    onChangeText: handleChange('email'),
-                    value: values.email,
-                    autoCapitalize: 'none',
-                  }}
-                />
-              </FormItem>
-              <FormItem name='password' label='Password'>
-                <Input
-                  config={{
-                    onBlur: handleBlur('password'),
-                    onChangeText: handleChange('password'),
-                    value: values.password,
-                    secureTextEntry: true,
-                  }}
-                />
-              </FormItem>
-              <Button onPress={handleSubmit} title='Save' />
-            </>
-          )}
-        </Formik>
+        <View>
+          <Text style={styles.title}>Login</Text>
+        </View>
+        <View>
+          <Formik
+            validationSchema={validationSchema}
+            initialValues={initialValues}
+            onSubmit={loginHandler}>
+            {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+              <>
+                <FormItem name='email' label='Email'>
+                  <Input
+                    config={{
+                      onBlur: handleBlur('email'),
+                      onChangeText: handleChange('email'),
+                      value: values.email,
+                      autoCapitalize: 'none',
+                    }}
+                  />
+                </FormItem>
+                <FormItem name='password' label='Password'>
+                  <Input
+                    config={{
+                      onBlur: handleBlur('password'),
+                      onChangeText: handleChange('password'),
+                      value: values.password,
+                      secureTextEntry: true,
+                    }}
+                  />
+                </FormItem>
+                <View style={styles.buttons}>
+                  <View style={styles.buttonContainer}>
+                    <ActionButton onPress={handleSubmit}>Login</ActionButton>
+                  </View>
+                  <View style={styles.buttonContainer}>
+                    <ActionButton onPress={signUpHandler} style={styles.signUp}>
+                      Sign Up
+                    </ActionButton>
+                  </View>
+                </View>
+              </>
+            )}
+          </Formik>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -72,5 +97,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    color: COLORS.primary100,
+    textAlign: 'center',
+    fontFamily: 'Karla-Bold',
+    marginBottom: 16,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  buttonContainer: {
+    flex: 1,
+    padding: 12,
+  },
+  signUp: {
+    backgroundColor: COLORS.primary800,
+    borderColor: COLORS.primary200,
+    borderWidth: 2,
   },
 })
