@@ -7,9 +7,13 @@ import { COLORS } from '../constants/GlobalStyles'
 import { getToken } from '../util/auth'
 import { ActionButton } from '../components/ui/ActionButton'
 import { useNavigation } from '@react-navigation/native'
+import * as SecureStore from 'expo-secure-store'
+import { useContext } from 'react'
+import { UserContext } from '../context/UserContext'
 
 export const LoginScreen = () => {
   // const navigation = useNavigation() <--- TODO
+  const userCtx = useContext(UserContext)
 
   const validationSchema = yup.object().shape({
     email: yup.string().required('Required').min(3, 'Usernames must be at least 6 characters'),
@@ -25,6 +29,7 @@ export const LoginScreen = () => {
     const response = await getToken(email, password)
     if (response.status === 200) {
       // Get token, store it
+      userCtx.authenticate(response.data.access_token)
       console.log(response.data.access_token)
     } else {
       Alert.alert('Invalid credentials', 'Email or password incorrect')

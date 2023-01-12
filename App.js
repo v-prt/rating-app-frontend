@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -20,22 +20,20 @@ import { LoginScreen } from './screens/LoginScreen'
 import { SignUpScreen } from './screens/SignUpScreen'
 import * as SecureStore from 'expo-secure-store'
 import { verifyToken } from './util/auth'
+import { UserContextProvider, UserContext } from './context/UserContext'
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
 
 SplashScreen.preventAutoHideAsync()
 
-async function getValueFor(key) {
+const getSecureValue = async key => {
   const result = await SecureStore.getItemAsync(key)
-  if (result) {
-    response = await verifyToken(result)
-    if (response.status === 200) {
-      // success stuff
-    }
-  } else {
-    // failure stuff
-  }
+  return result
+}
+
+const deleteToken = async key => {
+  await SecureStore.deleteItemAsync(key)
 }
 
 const RatingsScreens = () => {
@@ -94,12 +92,81 @@ const RatingsScreens = () => {
   )
 }
 
-export default function App() {
+const UnauthenticatedStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='Login' component={LoginScreen} />
+      <Stack.Screen name='SignUp' component={SignUpScreen} />
+    </Stack.Navigator>
+  )
+}
+
+const AuthenticatedStack = () => {
+  return (
+    <BottomTabs.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: COLORS.primary800,
+        },
+        headerTintColor: COLORS.primary100,
+        headerShadowVisible: false,
+        tabBarStyle: {
+          backgroundColor: COLORS.primary600,
+          borderTopWidth: 0,
+        },
+        tabBarInactiveTintColor: COLORS.primary100,
+        tabBarActiveTintColor: COLORS.primary200,
+      }}>
+      <BottomTabs.Screen
+        name='Ratings'
+        component={RatingsScreens}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name='stars' size={size} color={color} />,
+        }}
+      />
+      <BottomTabs.Screen
+        name='You'
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name='account-circle' size={size} color={color} />
+          ),
+        }}
+      />
+      <BottomTabs.Screen
+        name='Friends'
+        component={Friends}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name='group-work' size={size} color={color} />
+          ),
+          title: 'Friends',
+        }}
+      />
+    </BottomTabs.Navigator>
+  )
+}
+
+const Navigation = () => {
+  const userCtx = useContext(UserContext)
+
+  return (
+    <NavigationContainer>
+      {userCtx.isAuthenticated ? <AuthenticatedStack /> : <UnauthenticatedStack />}
+    </NavigationContainer>
+  )
+}
+
+const Root = () => {
   const [fontsLoaded] = useFonts({
     'Karla-Regular': require('./assets/fonts/Karla-Regular.ttf'),
     'Karla-Medium': require('./assets/fonts/Karla-Medium.ttf'),
     'Karla-Bold': require('./assets/fonts/Karla-Bold.ttf'),
   })
+
+  const [isTryingLogin, setIsTryingLogin] = useState(true)
+  const userCtx = useContext(UserContext)
 
   // app wide font
   const customTextProps = {
@@ -114,68 +181,44 @@ export default function App() {
       await new Promise(resolve => setTimeout(resolve, 1000))
       await SplashScreen.hideAsync()
     }
-
+    const fetchToken = async () => {
+      console.log('fetchtoken')
+      const token = await getSecureValue('bearerToken')
+      console.log(token)
+      if (token) {
+        response = await verifyToken(token)
+        if (response.status === 200) {
+          userCtx.authenticate(token)
+          console.log('login true')
+        } else {
+          deleteToken('bearerToken')
+          console.log('login false')
+        }
+      }
+    }
     if (fontsLoaded) {
+      fetchToken()
+      setIsTryingLogin(false)
       prepare()
       setCustomText(customTextProps)
     }
   }, [fontsLoaded])
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || isTryingLogin) {
     return null
   }
+  console.log(userCtx.isAuthenticated)
 
-  return <SignUpScreen />
+  return <Navigation />
+}
 
+export default function App() {
   return (
     <>
       <StatusBar style='light' />
-      <NavigationContainer>
-        <BottomTabs.Navigator
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: COLORS.primary800,
-            },
-            headerTintColor: COLORS.primary100,
-            headerShadowVisible: false,
-            tabBarStyle: {
-              backgroundColor: COLORS.primary600,
-              borderTopWidth: 0,
-            },
-            tabBarInactiveTintColor: COLORS.primary100,
-            tabBarActiveTintColor: COLORS.primary200,
-          }}>
-          <BottomTabs.Screen
-            name='Ratings'
-            component={RatingsScreens}
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name='stars' size={size} color={color} />
-              ),
-            }}
-          />
-          <BottomTabs.Screen
-            name='You'
-            component={ProfileScreen}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name='account-circle' size={size} color={color} />
-              ),
-            }}
-          />
-          <BottomTabs.Screen
-            name='Friends'
-            component={Friends}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name='group-work' size={size} color={color} />
-              ),
-              title: 'Friends',
-            }}
-          />
-        </BottomTabs.Navigator>
-      </NavigationContainer>
+      <UserContextProvider>
+        <Root />
+      </UserContextProvider>
     </>
   )
 }

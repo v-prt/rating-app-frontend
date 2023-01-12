@@ -24,8 +24,9 @@ export const getToken = async (email, password) => {
 }
 
 export const verifyToken = async token => {
+  const config = { headers: { Authorization: `Bearer ${token}` } }
   try {
-    const response = await axios.post(`${API_URL}/status`)
+    const response = await axios.get(`${API_URL}/status`, config)
     return response
   } catch (err) {
     console.log(err)

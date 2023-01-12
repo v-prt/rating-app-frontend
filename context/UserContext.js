@@ -16,10 +16,11 @@ export const UserContext = createContext({
   logout: () => {},
 })
 
-export const AuthContextProvider = ({ children }) => {
+export const UserContextProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState()
 
   const authenticate = token => {
+    console.log(authenticate)
     setAuthToken(token)
     saveToken('bearerToken', token)
   }
@@ -36,5 +37,5 @@ export const AuthContextProvider = ({ children }) => {
     logout: logout,
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

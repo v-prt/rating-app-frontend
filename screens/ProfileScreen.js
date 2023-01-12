@@ -1,10 +1,16 @@
+import { useContext } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
+import { ActionButton } from '../components/ui/ActionButton'
 import { COLORS } from '../constants/GlobalStyles'
+import { UserContext } from '../context/UserContext'
 
 export const ProfileScreen = () => {
+  const { logout } = useContext(UserContext)
+
   return (
     <View style={styles.screen}>
       <Text>Profile Screen</Text>
+      <ActionButton onPress={logout}>Logout?</ActionButton>
     </View>
   )
 }
