@@ -3,10 +3,11 @@ import { COLORS } from '../../constants/GlobalStyles'
 
 export const ActionButton = ({ children, onPress, style }) => {
   let buttonStyle = styles.button
+  let buttonTextStyle = styles.buttonText
 
   if (style) {
     buttonStyle = {
-      ...styles.button,
+      ...buttonStyle,
       ...style,
     }
   }

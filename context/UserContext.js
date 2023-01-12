@@ -20,7 +20,6 @@ export const UserContextProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState()
 
   const authenticate = token => {
-    console.log(authenticate)
     setAuthToken(token)
     saveToken('bearerToken', token)
   }

@@ -1,4 +1,12 @@
-import { Alert, Keyboard, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  Alert,
+  Button,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import { COLORS } from '../constants/GlobalStyles'
 import * as yup from 'yup'
 import { Formik } from 'formik'
@@ -7,7 +15,7 @@ import { FormItem } from '../components/ui/FormItem'
 import { ActionButton } from '../components/ui/ActionButton'
 import { createUser } from '../util/auth'
 
-export const SignUpScreen = () => {
+export const SignUpScreen = ({ navigation }) => {
   const validationSchema = yup.object().shape({
     email: yup.string().required('Required').email('Invalid email'),
     password: yup.string().required('Required').min(6, 'Passwords must be at least 6 characters'),
@@ -26,7 +34,7 @@ export const SignUpScreen = () => {
 
   const createAccountHandler = async values => {
     const response = await createUser(values)
-    console.log(response.data)
+
     if (response.status === 201) {
       //success stuff
     } else if (response.status === 400) {
@@ -34,6 +42,10 @@ export const SignUpScreen = () => {
     } else {
       // general error stuff
     }
+  }
+
+  const returnToLoginHandler = () => {
+    navigation.navigate('Login')
   }
 
   return (
@@ -56,6 +68,7 @@ export const SignUpScreen = () => {
                       onChangeText: handleChange('email'),
                       value: values.email,
                       keyboardType: 'email-address',
+                      autoCapitalize: 'none',
                     }}
                   />
                 </FormItem>
@@ -85,7 +98,6 @@ export const SignUpScreen = () => {
                       onBlur: handleBlur('firstName'),
                       onChangeText: handleChange('firstName'),
                       value: values.firstName,
-                      autoCorrect: false,
                     }}
                   />
                 </FormItem>
@@ -95,7 +107,6 @@ export const SignUpScreen = () => {
                       onBlur: handleBlur('lastName'),
                       onChangeText: handleChange('lastName'),
                       value: values.lastName,
-                      autoCorrect: false,
                     }}
                   />
                 </FormItem>
@@ -106,6 +117,9 @@ export const SignUpScreen = () => {
             )}
           </Formik>
         </View>
+        <ActionButton onPress={returnToLoginHandler} style={styles.loginButton}>
+          Login instead?
+        </ActionButton>
       </View>
     </TouchableWithoutFeedback>
   )
@@ -135,5 +149,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
     width: '75%',
     justifyContent: 'center',
+  },
+  loginButton: {
+    backgroundColor: 'transparent',
   },
 })

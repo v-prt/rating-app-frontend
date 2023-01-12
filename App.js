@@ -182,17 +182,14 @@ const Root = () => {
       await SplashScreen.hideAsync()
     }
     const fetchToken = async () => {
-      console.log('fetchtoken')
       const token = await getSecureValue('bearerToken')
-      console.log(token)
+
       if (token) {
         response = await verifyToken(token)
         if (response.status === 200) {
           userCtx.authenticate(token)
-          console.log('login true')
         } else {
           deleteToken('bearerToken')
-          console.log('login false')
         }
       }
     }
@@ -207,7 +204,6 @@ const Root = () => {
   if (!fontsLoaded || isTryingLogin) {
     return null
   }
-  console.log(userCtx.isAuthenticated)
 
   return <Navigation />
 }
