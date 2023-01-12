@@ -1,4 +1,13 @@
-import { StyleSheet, View, Keyboard, TouchableWithoutFeedback, Alert, Text } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Alert,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native'
 import * as yup from 'yup'
 import { Formik } from 'formik'
 import { Input } from '../components/ui/Input'
@@ -14,8 +23,8 @@ export const LoginScreen = ({ navigation }) => {
   const userCtx = useContext(UserContext)
 
   const validationSchema = yup.object().shape({
-    email: yup.string().required('Required').min(3, 'Usernames must be at least 6 characters'),
-    password: yup.string().required('Required').min(3, 'Passwords must be at least 6 characters'),
+    email: yup.string().email('Must be a valid email address.').required('Required'),
+    password: yup.string().required('Required').min(6, 'Passwords must be at least 6 characters'),
   })
 
   const initialValues = {
@@ -38,55 +47,59 @@ export const LoginScreen = ({ navigation }) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.screen}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.screen}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View>
-          <Text style={styles.title}>Login</Text>
-        </View>
-        <View>
-          <Formik
-            validationSchema={validationSchema}
-            initialValues={initialValues}
-            onSubmit={loginHandler}>
-            {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-              <>
-                <FormItem name='email' label='Email'>
-                  <Input
-                    config={{
-                      onBlur: handleBlur('email'),
-                      onChangeText: handleChange('email'),
-                      value: values.email,
-                      autoCapitalize: 'none',
-                      keyboardType: 'email-address',
-                    }}
-                  />
-                </FormItem>
-                <FormItem name='password' label='Password'>
-                  <Input
-                    config={{
-                      onBlur: handleBlur('password'),
-                      onChangeText: handleChange('password'),
-                      value: values.password,
-                      secureTextEntry: true,
-                    }}
-                  />
-                </FormItem>
-                <View style={styles.buttons}>
-                  <View style={styles.buttonContainer}>
-                    <ActionButton onPress={handleSubmit}>Login</ActionButton>
+          <View>
+            <Text style={styles.title}>Login</Text>
+          </View>
+          <View>
+            <Formik
+              validationSchema={validationSchema}
+              initialValues={initialValues}
+              onSubmit={loginHandler}>
+              {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+                <>
+                  <FormItem name='email' label='Email'>
+                    <Input
+                      config={{
+                        onBlur: handleBlur('email'),
+                        onChangeText: handleChange('email'),
+                        value: values.email,
+                        autoCapitalize: 'none',
+                        keyboardType: 'email-address',
+                      }}
+                    />
+                  </FormItem>
+                  <FormItem name='password' label='Password'>
+                    <Input
+                      config={{
+                        onBlur: handleBlur('password'),
+                        onChangeText: handleChange('password'),
+                        value: values.password,
+                        secureTextEntry: true,
+                      }}
+                    />
+                  </FormItem>
+                  <View style={styles.buttons}>
+                    <View style={styles.buttonContainer}>
+                      <ActionButton onPress={handleSubmit}>Login</ActionButton>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                      <ActionButton onPress={signUpHandler} style={styles.signUp}>
+                        Sign Up
+                      </ActionButton>
+                    </View>
                   </View>
-                  <View style={styles.buttonContainer}>
-                    <ActionButton onPress={signUpHandler} style={styles.signUp}>
-                      Sign Up
-                    </ActionButton>
-                  </View>
-                </View>
-              </>
-            )}
-          </Formik>
+                </>
+              )}
+            </Formik>
+          </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -116,5 +129,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary800,
     borderColor: COLORS.primary200,
     borderWidth: 2,
+  },
+  signUpSuccess: {
+    color: COLORS.primary100,
+    marginBottom: 40,
   },
 })
