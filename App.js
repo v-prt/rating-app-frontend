@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -18,11 +18,25 @@ import { Friends } from './screens/Friends'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { LoginScreen } from './screens/LoginScreen'
 import { SignUpScreen } from './screens/SignUpScreen'
+import * as SecureStore from 'expo-secure-store'
+import { verifyToken } from './util/auth'
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
 
 SplashScreen.preventAutoHideAsync()
+
+async function getValueFor(key) {
+  const result = await SecureStore.getItemAsync(key)
+  if (result) {
+    response = await verifyToken(result)
+    if (response.status === 200) {
+      // success stuff
+    }
+  } else {
+    // failure stuff
+  }
+}
 
 const RatingsScreens = () => {
   return (

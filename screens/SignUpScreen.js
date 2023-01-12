@@ -6,6 +6,7 @@ import { Input } from '../components/ui/Input'
 import { FormItem } from '../components/ui/FormItem'
 import { ActionButton } from '../components/ui/ActionButton'
 import { createUser } from '../util/auth'
+
 export const SignUpScreen = () => {
   const validationSchema = yup.object().shape({
     email: yup.string().required('Required').email('Invalid email'),
@@ -26,7 +27,7 @@ export const SignUpScreen = () => {
   const createAccountHandler = async values => {
     const response = await createUser(values)
     console.log(response.data)
-    if (response.status === 200) {
+    if (response.status === 201) {
       //success stuff
     } else if (response.status === 400) {
       Alert.alert('Invalid credentials', response.data.detail)

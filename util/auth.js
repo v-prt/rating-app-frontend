@@ -22,3 +22,13 @@ export const getToken = async (email, password) => {
     return err.response
   }
 }
+
+export const verifyToken = async token => {
+  try {
+    const response = await axios.post(`${API_URL}/status`)
+    return response
+  } catch (err) {
+    console.log(err)
+    return err.response
+  }
+}
