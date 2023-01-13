@@ -15,9 +15,9 @@ import { RecentRatingsList } from './screens/RecentRatingsList'
 import { RatingDetails } from './screens/RatingDetails'
 import { ManageRating } from './screens/ManageRating'
 import { Friends } from './screens/Friends'
-import { ProfileScreen } from './screens/ProfileScreen'
-import { LoginScreen } from './screens/LoginScreen'
-import { SignUpScreen } from './screens/SignUpScreen'
+import { Profile } from './screens/Profile'
+import { Login } from './screens/Login'
+import { Signup } from './screens/Signup'
 import * as SecureStore from 'expo-secure-store'
 import { verifyToken } from './util/auth'
 import { UserContextProvider, UserContext } from './context/UserContext'
@@ -103,14 +103,14 @@ const UnauthenticatedStack = () => {
       }}>
       <Stack.Screen
         name='Login'
-        component={LoginScreen}
+        component={Login}
         options={{
           title: 'Log In',
         }}
       />
       <Stack.Screen
         name='SignUp'
-        component={SignUpScreen}
+        component={Signup}
         options={{
           title: 'Create Account',
         }}
@@ -144,8 +144,8 @@ const AuthenticatedStack = () => {
         }}
       />
       <BottomTabs.Screen
-        name='You'
-        component={ProfileScreen}
+        name='Profile'
+        component={Profile}
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name='account-circle' size={size} color={color} />
@@ -159,7 +159,6 @@ const AuthenticatedStack = () => {
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name='group-work' size={size} color={color} />
           ),
-          title: 'Friends',
         }}
       />
     </BottomTabs.Navigator>
@@ -174,7 +173,6 @@ const Navigation = () => {
       theme={{
         colors: {
           background: COLORS.primary800,
-          primary: COLORS.primary100,
         },
       }}>
       {isAuthenticated ? <AuthenticatedStack /> : <UnauthenticatedStack />}
@@ -190,12 +188,13 @@ const Root = () => {
   })
 
   const [isTryingLogin, setIsTryingLogin] = useState(true)
-  const userCtx = useContext(UserContext)
+  const { authenticate } = useContext(UserContext)
 
-  // app wide font
+  // app-wide font / text style
   const customTextProps = {
     style: {
       fontFamily: 'Karla-Regular',
+      color: COLORS.primary100,
     },
   }
 
@@ -205,18 +204,20 @@ const Root = () => {
       await new Promise(resolve => setTimeout(resolve, 1000))
       await SplashScreen.hideAsync()
     }
+
     const fetchToken = async () => {
       const token = await getSecureValue('bearerToken')
 
       if (token) {
         response = await verifyToken(token)
         if (response.status === 200) {
-          userCtx.authenticate(token)
+          authenticate(token)
         } else {
           deleteToken('bearerToken')
         }
       }
     }
+
     if (fontsLoaded) {
       fetchToken()
       setIsTryingLogin(false)

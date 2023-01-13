@@ -10,7 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext'
 
-export const SignUpScreen = ({ navigation }) => {
+export const Signup = ({ navigation }) => {
   const userCtx = useContext(UserContext)
   const validationSchema = yup.object().shape({
     firstName: yup.string(),
@@ -134,13 +134,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary800,
     flex: 1,
     padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    color: COLORS.primary100,
-    textAlign: 'center',
-    fontFamily: 'Karla-Bold',
-    marginBottom: 16,
   },
   formRow: {
     flexDirection: 'row',

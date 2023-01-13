@@ -17,7 +17,7 @@ import { ActionButton } from '../components/ui/ActionButton'
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext'
 
-export const LoginScreen = ({ navigation }) => {
+export const Login = ({ navigation }) => {
   const userCtx = useContext(UserContext)
 
   const validationSchema = yup.object().shape({
@@ -103,13 +103,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    color: COLORS.primary100,
-    textAlign: 'center',
-    fontFamily: 'Karla-Bold',
-    marginBottom: 16,
-  },
   buttons: {
     marginVertical: 16,
   },
@@ -121,7 +114,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   signUpSuccess: {
-    color: COLORS.primary100,
     marginBottom: 40,
   },
 })

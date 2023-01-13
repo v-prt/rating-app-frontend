@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-Bold',
   },
   sublabel: {
-    color: COLORS.primary100,
     opacity: 0.5,
     fontSize: 12,
   },

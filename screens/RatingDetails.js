@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ratingText: {
-    color: COLORS.primary100,
     fontSize: 16,
     marginRight: 8,
   },
@@ -104,7 +103,6 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   address: {
-    color: COLORS.primary100,
     opacity: 0.5,
     marginTop: 10,
   },
@@ -112,12 +110,10 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   description: {
-    color: COLORS.primary100,
     fontSize: 16,
     marginTop: 20,
   },
   date: {
-    color: COLORS.primary100,
     fontSize: 16,
     opacity: 0.5,
     marginTop: 10,

@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     fontSize: 16,
+    opacity: 0.9,
   },
   multiline: {
     minHeight: 100,

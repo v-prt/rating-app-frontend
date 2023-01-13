@@ -4,12 +4,12 @@ import { ActionButton } from '../components/ui/ActionButton'
 import { COLORS } from '../constants/GlobalStyles'
 import { UserContext } from '../context/UserContext'
 
-export const ProfileScreen = () => {
+export const Profile = () => {
   const { logout } = useContext(UserContext)
 
   return (
     <View style={styles.screen}>
-      <Text>Profile Screen</Text>
+      <Text>TODO: Profile Screen (User Info, Stats, Settings)</Text>
       <ActionButton onPress={logout}>Log Out</ActionButton>
     </View>
   )

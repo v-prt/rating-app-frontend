@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'Karla-Bold',
-    color: COLORS.primary100,
     textAlign: 'center',
     fontSize: 18,
   },

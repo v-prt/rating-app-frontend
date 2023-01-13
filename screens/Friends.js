@@ -4,7 +4,7 @@ import { COLORS } from '../constants/GlobalStyles'
 export const Friends = () => {
   return (
     <View style={styles.screen}>
-      <Text>Friends Screen</Text>
+      <Text>TODO: Friends Screen (need to scope)</Text>
     </View>
   )
 }
@@ -13,5 +13,6 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: COLORS.primary800,
     flex: 1,
+    padding: 20,
   },
 })

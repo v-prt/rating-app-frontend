@@ -37,10 +37,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: COLORS.primary100,
   },
   date: {
-    color: COLORS.primary100,
     opacity: 0.5,
     fontsize: 14,
   },
@@ -52,6 +50,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Karla-Bold',
     marginRight: 6,
-    color: COLORS.primary100,
   },
 })

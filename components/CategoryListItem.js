@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: COLORS.primary100,
   },
   num: {
     fontSize: 14,
