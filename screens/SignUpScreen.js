@@ -1,13 +1,4 @@
-import {
-  Alert,
-  Button,
-  Keyboard,
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import { COLORS } from '../constants/GlobalStyles'
 import * as yup from 'yup'
 import { Formik } from 'formik'
@@ -61,48 +52,15 @@ export const SignUpScreen = ({ navigation }) => {
       keyboardVerticalOffset={0}
       keyboardDismissMode='none'
       bounces={false}>
-      <View>
-        <Text style={styles.title}>Create an Account</Text>
-      </View>
-      <View style={styles.formContainer}>
-        <Formik
-          validationSchema={validationSchema}
-          initialValues={initialValues}
-          onSubmit={createAccountHandler}>
-          {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-            <>
-              <FormItem name='email' label='Email'>
-                <Input
-                  config={{
-                    onBlur: handleBlur('email'),
-                    onChangeText: handleChange('email'),
-                    value: values.email,
-                    keyboardType: 'email-address',
-                    autoCapitalize: 'none',
-                  }}
-                />
-              </FormItem>
-              <FormItem name='password' label='Password'>
-                <Input
-                  config={{
-                    onBlur: handleBlur('password'),
-                    onChangeText: handleChange('password'),
-                    value: values.password,
-                    secureTextEntry: true,
-                  }}
-                />
-              </FormItem>
-              <FormItem name='username' label='Username'>
-                <Input
-                  config={{
-                    onBlur: handleBlur('username'),
-                    onChangeText: handleChange('username'),
-                    value: values.username,
-                    autoCorrect: false,
-                  }}
-                />
-              </FormItem>
-              <FormItem name='firstName' label='First name (optional)'>
+      <Formik
+        validationSchema={validationSchema}
+        initialValues={initialValues}
+        validateOnBlur={false}
+        onSubmit={createAccountHandler}>
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
+          <>
+            <View style={styles.formRow}>
+              <FormItem name='firstName' label='First name' style={styles.rowItem}>
                 <Input
                   config={{
                     onBlur: handleBlur('firstName'),
@@ -111,7 +69,7 @@ export const SignUpScreen = ({ navigation }) => {
                   }}
                 />
               </FormItem>
-              <FormItem name='lastName' label='Last name (optional)'>
+              <FormItem name='lastName' label='Last name' style={styles.rowItem}>
                 <Input
                   config={{
                     onBlur: handleBlur('lastName'),
@@ -120,16 +78,50 @@ export const SignUpScreen = ({ navigation }) => {
                   }}
                 />
               </FormItem>
-              <View style={styles.button}>
-                <ActionButton onPress={handleSubmit}>Create Account</ActionButton>
-              </View>
-            </>
-          )}
-        </Formik>
-      </View>
-      <ActionButton onPress={returnToLoginHandler} style={styles.loginButton}>
-        Login instead?
-      </ActionButton>
+            </View>
+            <FormItem name='username' label='Username'>
+              <Input
+                config={{
+                  onBlur: handleBlur('username'),
+                  onChangeText: handleChange('username'),
+                  value: values.username,
+                  autoCorrect: false,
+                }}
+              />
+            </FormItem>
+            <FormItem name='email' label='Email'>
+              <Input
+                config={{
+                  onBlur: handleBlur('email'),
+                  onChangeText: handleChange('email'),
+                  value: values.email,
+                  keyboardType: 'email-address',
+                  autoCapitalize: 'none',
+                }}
+              />
+            </FormItem>
+            <FormItem name='password' label='Password'>
+              <Input
+                config={{
+                  onBlur: handleBlur('password'),
+                  onChangeText: handleChange('password'),
+                  value: values.password,
+                  secureTextEntry: true,
+                }}
+              />
+            </FormItem>
+            <View style={styles.buttons}>
+              <ActionButton onPress={handleSubmit}>Create Account</ActionButton>
+              <ActionButton
+                onPress={returnToLoginHandler}
+                buttonStyle={styles.flatButton}
+                textStyle={styles.flatButtonText}>
+                Log In Instead
+              </ActionButton>
+            </View>
+          </>
+        )}
+      </Formik>
     </KeyboardAwareScrollView>
   )
 }
@@ -138,10 +130,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: COLORS.primary800,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 20,
-    paddingTop: 100,
   },
   title: {
     fontSize: 24,
@@ -150,17 +139,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Karla-Bold',
     marginBottom: 16,
   },
-  formContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '90%',
+  formRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  button: {
-    marginTop: 12,
-    width: '75%',
-    justifyContent: 'center',
+  rowItem: {
+    width: '48%',
   },
-  loginButton: {
+  buttons: {
+    marginVertical: 16,
+  },
+  flatButton: {
     backgroundColor: 'transparent',
+  },
+  flatButtonText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 16,
   },
 })

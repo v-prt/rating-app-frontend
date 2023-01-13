@@ -4,7 +4,6 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
-  Text,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native'
@@ -15,7 +14,6 @@ import { FormItem } from '../components/ui/FormItem'
 import { COLORS } from '../constants/GlobalStyles'
 import { getToken } from '../util/auth'
 import { ActionButton } from '../components/ui/ActionButton'
-import { useNavigation } from '@react-navigation/native'
 import { useContext } from 'react'
 import { UserContext } from '../context/UserContext'
 
@@ -39,7 +37,6 @@ export const LoginScreen = ({ navigation }) => {
     } else {
       Alert.alert('Invalid credentials', 'Email or password incorrect')
     }
-    // cleanup
   }
 
   const signUpHandler = () => {
@@ -52,51 +49,46 @@ export const LoginScreen = ({ navigation }) => {
       style={styles.screen}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View>
-          <View>
-            <Text style={styles.title}>Login</Text>
-          </View>
-          <View>
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={initialValues}
-              onSubmit={loginHandler}>
-              {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-                <>
-                  <FormItem name='email' label='Email'>
-                    <Input
-                      config={{
-                        onBlur: handleBlur('email'),
-                        onChangeText: handleChange('email'),
-                        value: values.email,
-                        autoCapitalize: 'none',
-                        keyboardType: 'email-address',
-                      }}
-                    />
-                  </FormItem>
-                  <FormItem name='password' label='Password'>
-                    <Input
-                      config={{
-                        onBlur: handleBlur('password'),
-                        onChangeText: handleChange('password'),
-                        value: values.password,
-                        secureTextEntry: true,
-                      }}
-                    />
-                  </FormItem>
-                  <View style={styles.buttons}>
-                    <View style={styles.buttonContainer}>
-                      <ActionButton onPress={handleSubmit}>Login</ActionButton>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                      <ActionButton onPress={signUpHandler} style={styles.signUp}>
-                        Sign Up
-                      </ActionButton>
-                    </View>
-                  </View>
-                </>
-              )}
-            </Formik>
-          </View>
+          <Formik
+            validationSchema={validationSchema}
+            initialValues={initialValues}
+            validateOnBlur={false}
+            onSubmit={loginHandler}>
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <>
+                <FormItem name='email' label='Email'>
+                  <Input
+                    config={{
+                      onBlur: handleBlur('email'),
+                      onChangeText: handleChange('email'),
+                      value: values.email,
+                      autoCapitalize: 'none',
+                      keyboardType: 'email-address',
+                    }}
+                  />
+                </FormItem>
+                <FormItem name='password' label='Password'>
+                  <Input
+                    config={{
+                      onBlur: handleBlur('password'),
+                      onChangeText: handleChange('password'),
+                      value: values.password,
+                      secureTextEntry: true,
+                    }}
+                  />
+                </FormItem>
+                <View style={styles.buttons}>
+                  <ActionButton onPress={handleSubmit}>Log In</ActionButton>
+                  <ActionButton
+                    onPress={signUpHandler}
+                    buttonStyle={styles.flatButton}
+                    textStyle={styles.flatButtonText}>
+                    Sign Up Instead
+                  </ActionButton>
+                </View>
+              </>
+            )}
+          </Formik>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -107,8 +99,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: COLORS.primary800,
     flex: 1,
-    justifyContent: 'center',
-    padding: 14,
+    padding: 20,
   },
   title: {
     fontSize: 24,
@@ -118,17 +109,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginVertical: 16,
   },
-  buttonContainer: {
-    flex: 1,
-    padding: 12,
+  flatButton: {
+    backgroundColor: 'transparent',
   },
-  signUp: {
-    backgroundColor: COLORS.primary800,
-    borderColor: COLORS.primary200,
-    borderWidth: 2,
+  flatButtonText: {
+    fontFamily: 'Karla-Regular',
+    fontSize: 16,
   },
   signUpSuccess: {
     color: COLORS.primary100,

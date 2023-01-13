@@ -94,9 +94,27 @@ const RatingsScreens = () => {
 
 const UnauthenticatedStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='Login' component={LoginScreen} />
-      <Stack.Screen name='SignUp' component={SignUpScreen} />
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: COLORS.primary800,
+        },
+        headerTintColor: COLORS.primary100,
+      }}>
+      <Stack.Screen
+        name='Login'
+        component={LoginScreen}
+        options={{
+          title: 'Log In',
+        }}
+      />
+      <Stack.Screen
+        name='SignUp'
+        component={SignUpScreen}
+        options={{
+          title: 'Create Account',
+        }}
+      />
     </Stack.Navigator>
   )
 }
