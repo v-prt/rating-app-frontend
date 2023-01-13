@@ -13,19 +13,19 @@ import { UserContext } from '../context/UserContext'
 export const SignUpScreen = ({ navigation }) => {
   const userCtx = useContext(UserContext)
   const validationSchema = yup.object().shape({
-    email: yup.string().required('Required').email('Invalid email'),
-    password: yup.string().required('Required').min(6, 'Passwords must be at least 6 characters'),
-    username: yup.string().required('Required').min(4, 'Username must be at least 4 characters'),
     firstName: yup.string(),
     lastName: yup.string(),
+    username: yup.string().required('Required').min(4, 'Username must be at least 4 characters'),
+    email: yup.string().required('Required').email('Invalid email'),
+    password: yup.string().required('Required').min(6, 'Passwords must be at least 6 characters'),
   })
 
   const initialValues = {
-    email: '',
-    password: '',
-    username: '',
     firstName: '',
     lastName: '',
+    username: '',
+    email: '',
+    password: '',
   }
 
   const createAccountHandler = async values => {
@@ -56,8 +56,9 @@ export const SignUpScreen = ({ navigation }) => {
         validationSchema={validationSchema}
         initialValues={initialValues}
         validateOnBlur={false}
+        validateOnChange={false}
         onSubmit={createAccountHandler}>
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
           <>
             <View style={styles.formRow}>
               <FormItem name='firstName' label='First name' style={styles.rowItem}>
@@ -111,7 +112,9 @@ export const SignUpScreen = ({ navigation }) => {
               />
             </FormItem>
             <View style={styles.buttons}>
-              <ActionButton onPress={handleSubmit}>Create Account</ActionButton>
+              <ActionButton onPress={handleSubmit} loading={isSubmitting}>
+                Create Account
+              </ActionButton>
               <ActionButton
                 onPress={returnToLoginHandler}
                 buttonStyle={styles.flatButton}

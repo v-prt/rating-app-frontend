@@ -54,7 +54,7 @@ export const LoginScreen = ({ navigation }) => {
             initialValues={initialValues}
             validateOnBlur={false}
             onSubmit={loginHandler}>
-            {({ handleChange, handleBlur, handleSubmit, values }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, isSubmitting }) => (
               <>
                 <FormItem name='email' label='Email'>
                   <Input
@@ -78,7 +78,9 @@ export const LoginScreen = ({ navigation }) => {
                   />
                 </FormItem>
                 <View style={styles.buttons}>
-                  <ActionButton onPress={handleSubmit}>Log In</ActionButton>
+                  <ActionButton onPress={handleSubmit} loading={isSubmitting}>
+                    Log In
+                  </ActionButton>
                   <ActionButton
                     onPress={signUpHandler}
                     buttonStyle={styles.flatButton}

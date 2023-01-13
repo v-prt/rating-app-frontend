@@ -10,7 +10,7 @@ export const ProfileScreen = () => {
   return (
     <View style={styles.screen}>
       <Text>Profile Screen</Text>
-      <ActionButton onPress={logout}>Logout?</ActionButton>
+      <ActionButton onPress={logout}>Log Out</ActionButton>
     </View>
   )
 }
@@ -19,5 +19,6 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: COLORS.primary800,
     flex: 1,
+    padding: 20,
   },
 })

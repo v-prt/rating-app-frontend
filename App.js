@@ -167,11 +167,17 @@ const AuthenticatedStack = () => {
 }
 
 const Navigation = () => {
-  const userCtx = useContext(UserContext)
+  const { isAuthenticated } = useContext(UserContext)
 
   return (
-    <NavigationContainer>
-      {userCtx.isAuthenticated ? <AuthenticatedStack /> : <UnauthenticatedStack />}
+    <NavigationContainer
+      theme={{
+        colors: {
+          background: COLORS.primary800,
+          primary: COLORS.primary100,
+        },
+      }}>
+      {isAuthenticated ? <AuthenticatedStack /> : <UnauthenticatedStack />}
     </NavigationContainer>
   )
 }
