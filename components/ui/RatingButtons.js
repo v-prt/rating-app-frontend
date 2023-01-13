@@ -14,8 +14,8 @@ export const RatingButtons = ({ rating, setRating }) => {
     const color = i < rating ? COLORS.primary100 : COLORS.primary400
 
     return (
-      <Pressable onPress={() => handleRating(i + 1)} style={styles.button}>
-        <MaterialIcons key={i} name={name} size={24} color={color} />
+      <Pressable key={i} onPress={() => handleRating(i + 1)} style={styles.button}>
+        <MaterialIcons name={name} size={24} color={color} />
       </Pressable>
     )
   })

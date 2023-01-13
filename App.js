@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -16,11 +16,25 @@ import { RatingDetails } from './screens/RatingDetails'
 import { ManageRating } from './screens/ManageRating'
 import { Friends } from './screens/Friends'
 import { ProfileScreen } from './screens/ProfileScreen'
+import { LoginScreen } from './screens/LoginScreen'
+import { SignUpScreen } from './screens/SignUpScreen'
+import * as SecureStore from 'expo-secure-store'
+import { verifyToken } from './util/auth'
+import { UserContextProvider, UserContext } from './context/UserContext'
 
 const Stack = createNativeStackNavigator()
 const BottomTabs = createBottomTabNavigator()
 
 SplashScreen.preventAutoHideAsync()
+
+const getSecureValue = async key => {
+  const result = await SecureStore.getItemAsync(key)
+  return result
+}
+
+const deleteToken = async key => {
+  await SecureStore.deleteItemAsync(key)
+}
 
 const RatingsScreens = () => {
   return (
@@ -78,12 +92,105 @@ const RatingsScreens = () => {
   )
 }
 
-export default function App() {
+const UnauthenticatedStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: COLORS.primary800,
+        },
+        headerTintColor: COLORS.primary100,
+      }}>
+      <Stack.Screen
+        name='Login'
+        component={LoginScreen}
+        options={{
+          title: 'Log In',
+        }}
+      />
+      <Stack.Screen
+        name='SignUp'
+        component={SignUpScreen}
+        options={{
+          title: 'Create Account',
+        }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const AuthenticatedStack = () => {
+  return (
+    <BottomTabs.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: COLORS.primary800,
+        },
+        headerTintColor: COLORS.primary100,
+        headerShadowVisible: false,
+        tabBarStyle: {
+          backgroundColor: COLORS.primary600,
+          borderTopWidth: 0,
+        },
+        tabBarInactiveTintColor: COLORS.primary100,
+        tabBarActiveTintColor: COLORS.primary200,
+      }}>
+      <BottomTabs.Screen
+        name='Ratings'
+        component={RatingsScreens}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name='stars' size={size} color={color} />,
+        }}
+      />
+      <BottomTabs.Screen
+        name='You'
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name='account-circle' size={size} color={color} />
+          ),
+        }}
+      />
+      <BottomTabs.Screen
+        name='Friends'
+        component={Friends}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name='group-work' size={size} color={color} />
+          ),
+          title: 'Friends',
+        }}
+      />
+    </BottomTabs.Navigator>
+  )
+}
+
+const Navigation = () => {
+  const { isAuthenticated } = useContext(UserContext)
+
+  return (
+    <NavigationContainer
+      theme={{
+        colors: {
+          background: COLORS.primary800,
+          primary: COLORS.primary100,
+        },
+      }}>
+      {isAuthenticated ? <AuthenticatedStack /> : <UnauthenticatedStack />}
+    </NavigationContainer>
+  )
+}
+
+const Root = () => {
   const [fontsLoaded] = useFonts({
     'Karla-Regular': require('./assets/fonts/Karla-Regular.ttf'),
     'Karla-Medium': require('./assets/fonts/Karla-Medium.ttf'),
     'Karla-Bold': require('./assets/fonts/Karla-Bold.ttf'),
   })
+
+  const [isTryingLogin, setIsTryingLogin] = useState(true)
+  const userCtx = useContext(UserContext)
 
   // app wide font
   const customTextProps = {
@@ -98,66 +205,40 @@ export default function App() {
       await new Promise(resolve => setTimeout(resolve, 1000))
       await SplashScreen.hideAsync()
     }
+    const fetchToken = async () => {
+      const token = await getSecureValue('bearerToken')
 
+      if (token) {
+        response = await verifyToken(token)
+        if (response.status === 200) {
+          userCtx.authenticate(token)
+        } else {
+          deleteToken('bearerToken')
+        }
+      }
+    }
     if (fontsLoaded) {
+      fetchToken()
+      setIsTryingLogin(false)
       prepare()
       setCustomText(customTextProps)
     }
   }, [fontsLoaded])
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || isTryingLogin) {
     return null
   }
 
+  return <Navigation />
+}
+
+export default function App() {
   return (
     <>
       <StatusBar style='light' />
-      <NavigationContainer>
-        <BottomTabs.Navigator
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: COLORS.primary800,
-            },
-            headerTintColor: COLORS.primary100,
-            headerShadowVisible: false,
-            tabBarStyle: {
-              backgroundColor: COLORS.primary600,
-              borderTopWidth: 0,
-            },
-            tabBarInactiveTintColor: COLORS.primary100,
-            tabBarActiveTintColor: COLORS.primary200,
-          }}>
-          <BottomTabs.Screen
-            name='Ratings'
-            component={RatingsScreens}
-            options={{
-              headerShown: false,
-              tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name='stars' size={size} color={color} />
-              ),
-            }}
-          />
-          <BottomTabs.Screen
-            name='You'
-            component={ProfileScreen}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name='account-circle' size={size} color={color} />
-              ),
-            }}
-          />
-          <BottomTabs.Screen
-            name='Friends'
-            component={Friends}
-            options={{
-              tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name='group-work' size={size} color={color} />
-              ),
-              title: 'Friends',
-            }}
-          />
-        </BottomTabs.Navigator>
-      </NavigationContainer>
+      <UserContextProvider>
+        <Root />
+      </UserContextProvider>
     </>
   )
 }
